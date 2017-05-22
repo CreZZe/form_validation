@@ -134,6 +134,12 @@ $("#payment").change( () => {
 $("form").submit( (e) => {
 	$checked = 0;
 	
+	function changeColor(label, input) {
+		e.preventDefault();
+		labelColor(label, 'red');
+		inputColor(input, 'red');
+	}
+	
 	function labelColor(object, color) {
 		$("label[for=" + object + "]").css({"color": color});
 	}
@@ -174,38 +180,43 @@ $("form").submit( (e) => {
 		}
 	});
 	
-	if ( $("#payment").val() == 'credit card' || $("#payment").val() == 'select_method' ) {
-		$cc_length = $('input[name="user_cc-num"]').val().length;
-		$zip_length = $('input[name="user_zip"]').val().length;
-		$cvv_length = $('input[name="user_cvv"]').val().length;
+	if ( $("#payment").val() == 'credit card' || $("#payment").val() == undefined ) {
+		$cc = $('input[name="user_cc-num"]').val();
+		$zip = $('input[name="user_zip"]').val();
+		$cvv = $('input[name="user_cvv"]').val();
 		
 		
-		if (  $cc_length < 13 || $cc_length > 16 ) {
-			e.preventDefault();
-			labelColor('cc-num', 'red');
-			inputColor('user_cc-num', 'red');
+		if ( $cc.length < 13 || $cc.length > 16 ) {
+			changeColor('cc-num', 'user_cc-num');
 		} else {
-			labelColor('cc-num', 'black');
-			inputColor('user_cc-num', 'black');
-
+			if ( isNaN($cc) ) {
+				changeColor('cc-num', 'user_cc-num');
+			} else {
+				labelColor('cc-num', 'black');
+				inputColor('user_cc-num', 'black');
+			}
 		}
 		
-		if (  $zip_length == 5 ) {
-			labelColor('zip', 'black');
-			inputColor('user_zip', 'black');
+		if (  $zip.length == 5 ) {
+			if ( isNaN($zip) ) {
+				changeColor('zip', 'user_zip');
+			} else {
+				labelColor('zip', 'black');
+				inputColor('user_zip', 'black');
+			}
 		} else {
-			e.preventDefault();
-			labelColor('zip', 'red');
-			inputColor('user_zip', 'red');
+			changeColor('zip', 'user_zip');
 		}
 		
-		if (  $cvv_length == 3 ) {
-			labelColor('cvv', 'black');
-			inputColor('user_cvv', 'black');
+		if (  $cvv.length == 3 ) {
+			if ( isNaN($cvv) ) {
+				changeColor('cvv', 'user_cvv');
+			} else {
+				labelColor('cvv', 'black');
+				inputColor('user_cvv', 'black');
+			}
 		} else {
-			e.preventDefault();
-			labelColor('cvv', 'red');
-			inputColor('user_cvv', 'red');
+			changeColor('cvv', 'user_cvv');
 		}
 	}
 });
